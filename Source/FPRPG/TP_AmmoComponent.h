@@ -17,7 +17,7 @@ class FPRPG_API UTP_AmmoComponent : public UTextRenderComponent
 public:
 
 	// Maximum ammo count for gun
-	UPROPERTY(BlueprintReadWrite, Category = AmmoDetails)
+	UPROPERTY(EditAnywhere, Category = AmmoDetails)
 	int32 ClipSize;
 
 	// Displayed ammo count for gun
