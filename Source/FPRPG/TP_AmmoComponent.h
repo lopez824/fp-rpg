@@ -34,6 +34,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Reload();
 
+protected:
+
+	// Sets up ammo Text
+	virtual void BeginPlay();
 private:
 
 	// Helper function for Int - String - FText conversions

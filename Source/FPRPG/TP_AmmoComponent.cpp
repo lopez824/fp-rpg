@@ -13,19 +13,22 @@ UTP_AmmoComponent::UTP_AmmoComponent()
 	this->SetHorizontalAlignment(EHTA_Center);
 	this->SetVerticalAlignment(EVRTA_TextCenter);
 	this->SetWorldSize(3.0f);
-
-	// Initialize Text
-	// TODO Fix Initial Ammo count is 0 bug
-	CurrentAmmoCount = ClipSize;
-
-	FText ammoText = TextFromInt(CurrentAmmoCount);
-	this->SetText(ammoText);
 }
 
 FText UTP_AmmoComponent::TextFromInt(int32 value)
 {
 	FString string = FString::FromInt(value);
 	return FText::FromString(string);
+}
+
+void UTP_AmmoComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// Initialize Text
+	CurrentAmmoCount = ClipSize;
+	FText ammoText = TextFromInt(CurrentAmmoCount);
+	this->SetText(ammoText);
 }
 
 void UTP_AmmoComponent::DecreaseAmmoCount()
