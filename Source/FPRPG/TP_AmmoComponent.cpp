@@ -15,7 +15,7 @@ UTP_AmmoComponent::UTP_AmmoComponent()
 	this->SetWorldSize(3.0f);
 
 	// Initialize Text
-	ClipSize = 30;
+	// TODO Fix Initial Ammo count is 0 bug
 	CurrentAmmoCount = ClipSize;
 
 	FText ammoText = TextFromInt(CurrentAmmoCount);
@@ -30,7 +30,7 @@ FText UTP_AmmoComponent::TextFromInt(int32 value)
 
 void UTP_AmmoComponent::DecreaseAmmoCount()
 {
-	--CurrentAmmoCount;
+	CurrentAmmoCount = CurrentAmmoCount - 1;
 	if (CurrentAmmoCount < 0)
 		CurrentAmmoCount = 0;
 

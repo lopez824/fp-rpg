@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "TP_AmmoComponent.h"
 #include "TP_WeaponComponent.generated.h"
 
 class AFPRPGCharacter;
@@ -21,6 +22,14 @@ public:
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	USoundBase* FireSound;
+
+	/** Sound to play with an empty clip */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	USoundBase* EmptySound;
+
+	/** Sound to play when reloading */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	USoundBase* ReloadSound;
 	
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
@@ -29,6 +38,10 @@ public:
 	/** Gun muzzle's offset from the characters location */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	FVector MuzzleOffset;
+
+	// Ammo Display
+	UPROPERTY(BlueprintReadWrite)
+	UTP_AmmoComponent* AmmoDisplay;
 
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
@@ -40,6 +53,10 @@ public:
 	/** Make the weapon Fire a Projectile */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
+
+	/** Reload weapon */
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void Reload();
 
 protected:
 	/** Ends gameplay for this component. */
