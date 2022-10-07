@@ -35,13 +35,13 @@ AFPRPGCharacter::AFPRPGCharacter()
 	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
 
+	bCanAttack = true;
 }
 
 void AFPRPGCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -56,13 +56,10 @@ void AFPRPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	PlayerInputComponent->BindAction("PrimaryAction", IE_Pressed, this, &AFPRPGCharacter::OnPrimaryAction);
+	PlayerInputComponent->BindAxis("Attack", this, &AFPRPGCharacter::OnAttackAction);
 
 	// Bind reload event
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AFPRPGCharacter::OnReloadAction);
-
-	// Enable touchscreen input
-	EnableTouchscreenMovement(PlayerInputComponent);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &AFPRPGCharacter::MoveForward);
@@ -77,40 +74,26 @@ void AFPRPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAxis("Look Up / Down Gamepad", this, &AFPRPGCharacter::LookUpAtRate);
 }
 
-void AFPRPGCharacter::OnPrimaryAction()
+void AFPRPGCharacter::OnAttackAction(float Value)
 {
-	// Trigger the OnItemUsed Event
-	OnUseItem.Broadcast();
+	// Trigger the OnAttack Event
+	if (Value == 1.0f && bCanAttack == true)
+	{
+		bCanAttack = false;
+		OnAttack.Broadcast();
+		FTimerHandle handle;
+		GetWorldTimerManager().SetTimer(handle, this, &AFPRPGCharacter::ResetAttack, AttackSpeed, false);
+	}
+}
+
+void AFPRPGCharacter::ResetAttack()
+{
+	bCanAttack = true;
 }
 
 void AFPRPGCharacter::OnReloadAction()
 {
 	OnReload.Broadcast();
-}
-
-void AFPRPGCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	if (TouchItem.bIsPressed == true)
-	{
-		return;
-	}
-	if ((FingerIndex == TouchItem.FingerIndex) && (TouchItem.bMoved == false))
-	{
-		OnPrimaryAction();
-	}
-	TouchItem.bIsPressed = true;
-	TouchItem.FingerIndex = FingerIndex;
-	TouchItem.Location = Location;
-	TouchItem.bMoved = false;
-}
-
-void AFPRPGCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	if (TouchItem.bIsPressed == false)
-	{
-		return;
-	}
-	TouchItem.bIsPressed = false;
 }
 
 void AFPRPGCharacter::MoveForward(float Value)
@@ -141,17 +124,4 @@ void AFPRPGCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * TurnRateGamepad * GetWorld()->GetDeltaSeconds());
-}
-
-bool AFPRPGCharacter::EnableTouchscreenMovement(class UInputComponent* PlayerInputComponent)
-{
-	if (FPlatformMisc::SupportsTouchInput() || GetDefault<UInputSettings>()->bUseMouseForTouch)
-	{
-		PlayerInputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AFPRPGCharacter::BeginTouch);
-		PlayerInputComponent->BindTouch(EInputEvent::IE_Released, this, &AFPRPGCharacter::EndTouch);
-
-		return true;
-	}
-	
-	return false;
 }
