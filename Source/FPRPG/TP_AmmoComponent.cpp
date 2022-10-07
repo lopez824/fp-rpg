@@ -43,6 +43,7 @@ void UTP_AmmoComponent::DecreaseAmmoCount()
 
 void UTP_AmmoComponent::Reload()
 {
+	int32 ammoOnReload = CurrentAmmoCount;
 	CurrentAmmoCount = ClipSize;
 	FText ammoText = TextFromInt(CurrentAmmoCount);
 	this->SetText(ammoText);

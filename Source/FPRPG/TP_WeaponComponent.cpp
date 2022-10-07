@@ -75,9 +75,12 @@ void UTP_WeaponComponent::Reload()
 {
 	if (AmmoDisplay != nullptr)
 	{
-		if (ReloadSound != nullptr)
-			UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, Character->GetActorLocation());
-		AmmoDisplay->Reload();
+		if (AmmoDisplay->CurrentAmmoCount != AmmoDisplay->ClipSize)
+		{
+			if (ReloadSound != nullptr)
+				UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, Character->GetActorLocation());
+			AmmoDisplay->Reload();
+		}
 	}
 		
 }
