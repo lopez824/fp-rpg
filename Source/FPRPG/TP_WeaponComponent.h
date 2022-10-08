@@ -58,6 +58,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
 
+	// Spawns bullet
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void SpawnProjectile(UWorld* World);
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void PlaySound(USoundBase* Sound);
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void PlayAnimation(UAnimMontage* Animation);
+
 	/** Reload weapon */
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void Reload();

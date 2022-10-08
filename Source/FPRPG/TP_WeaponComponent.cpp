@@ -31,44 +31,53 @@ void UTP_WeaponComponent::Fire()
 		{
 			if (AmmoDisplay->CurrentAmmoCount > 0)
 			{
-				APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
-				const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
-				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-				const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
-
-				//Set Spawn Collision Handling Override
-				FActorSpawnParameters ActorSpawnParams;
-				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-				// Spawn the projectile at the muzzle
-				World->SpawnActor<AFPRPGProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-
+				SpawnProjectile(World);
 				AmmoDisplay->DecreaseAmmoCount();
 
 				// Try and play the sound if specified
-				if (FireSound != nullptr)
-				{
-					UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
-				}
+				PlaySound(FireSound);
 
 				// Try and play a firing animation if specified
-				if (FireAnimation != nullptr)
-				{
-					// Get the animation object for the arms mesh
-					UAnimInstance* AnimInstance = Character->GetMesh1P()->GetAnimInstance();
-					if (AnimInstance != nullptr)
-					{
-						AnimInstance->Montage_Play(FireAnimation, 1.f);
-					}
-				}
+				PlayAnimation(FireAnimation);
 			}
 			else
 			{
-				if (EmptySound != nullptr)
-					UGameplayStatics::PlaySoundAtLocation(this, EmptySound, Character->GetActorLocation());
+				PlaySound(EmptySound);
 			}
 		}
 	}
+}
+
+void UTP_WeaponComponent::SpawnProjectile(UWorld* World)
+{
+	APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
+	const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
+	// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+	const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
+
+	//Set Spawn Collision Handling Override
+	FActorSpawnParameters ActorSpawnParams;
+	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+	// Spawn the projectile at the muzzle
+	World->SpawnActor<AFPRPGProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+}
+
+void UTP_WeaponComponent::PlayAnimation(UAnimMontage* Animation)
+{
+	if (Animation != nullptr)
+	{
+		UAnimInstance* AnimInstance = Character->GetMesh1P()->GetAnimInstance();
+
+		if (AnimInstance != nullptr)
+			AnimInstance->Montage_Play(Animation, 1.f);
+	}
+}
+
+void UTP_WeaponComponent::PlaySound(USoundBase* Sound)
+{
+	if (Sound != nullptr)
+		UGameplayStatics::PlaySoundAtLocation(this, Sound, Character->GetActorLocation());
 }
 
 void UTP_WeaponComponent::Reload()
