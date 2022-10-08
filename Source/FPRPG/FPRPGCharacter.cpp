@@ -79,7 +79,7 @@ void AFPRPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 void AFPRPGCharacter::OnAttackAction(float Value)
 {
 	// Trigger the OnAttack Event based on AttackSpeed
-	if (Value == 1.0f && bCanAttack == true && AttackSpeed != 0.f)
+	if (Value == 1.0f && bCanAttack == true && AttackSpeed > 0.f)
 	{
 		bCanAttack = false;
 		OnAttack.Broadcast();
