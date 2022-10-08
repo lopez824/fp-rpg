@@ -15,7 +15,6 @@ class FPRPG_API UTP_WeaponComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
 
@@ -24,6 +23,9 @@ public:
 	void AttachWeapon(AFPRPGCharacter* TargetCharacter);
 
 protected:
+	/** The Character holding this weapon*/
+	AFPRPGCharacter* Character;
+
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 	TSubclassOf<class AFPRPGProjectile> ProjectileClass;
@@ -58,15 +60,17 @@ protected:
 
 	/** Make the weapon Fire a Projectile */
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void Fire();
+	virtual void Fire();
 
 	// Spawns bullet
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void SpawnProjectile(UWorld* World);
+	virtual void SpawnProjectile(UWorld* World);
 
+	// Play the sound if specified
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void PlaySound(USoundBase* Sound);
 
+	// Play a firing animation if specified
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void PlayAnimation(UAnimMontage* Animation);
 
@@ -77,9 +81,4 @@ protected:
 	/** Ends gameplay for this component. */
 	UFUNCTION()
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-		
-
-private:
-	/** The Character holding this weapon*/
-	AFPRPGCharacter* Character;
 };

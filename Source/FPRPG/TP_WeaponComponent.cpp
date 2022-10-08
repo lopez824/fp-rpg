@@ -15,7 +15,6 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
 }
 
-
 void UTP_WeaponComponent::Fire()
 {
 	if(Character == nullptr || Character->GetController() == nullptr)
@@ -33,11 +32,7 @@ void UTP_WeaponComponent::Fire()
 			{
 				SpawnProjectile(World);
 				AmmoDisplay->DecreaseAmmoCount();
-
-				// Try and play the sound if specified
 				PlaySound(FireSound);
-
-				// Try and play a firing animation if specified
 				PlayAnimation(FireAnimation);
 			}
 			else
