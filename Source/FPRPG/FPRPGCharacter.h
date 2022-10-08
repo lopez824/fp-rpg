@@ -36,15 +36,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float TurnRateGamepad;
 
+	// Assignable attack speed for various weapons
+	float AttackSpeed;
+
 	/** Delegate to whom anyone can subscribe to receive this event */
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FOnAttack OnAttack;
 
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FOnReload OnReload;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
-	float AttackSpeed;
 
 	AFPRPGCharacter();
 
@@ -53,12 +53,17 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	// Called when assigning attack speed from weapon components
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void SetAttackSpeed(float Value);
+
 protected:
 
 	virtual void BeginPlay();
 
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
+	// Resets Attack Speed timer
 	void ResetAttack();
 	
 	/** Fires a projectile. */
@@ -86,6 +91,8 @@ protected:
 	void LookUpAtRate(float Rate);
 
 private:
+
+	// Handles Attack Input Action
 	bool bCanAttack;
 };
 

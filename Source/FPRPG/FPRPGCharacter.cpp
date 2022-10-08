@@ -35,7 +35,9 @@ AFPRPGCharacter::AFPRPGCharacter()
 	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
 
+	// Initialize character stats
 	bCanAttack = true;
+	AttackSpeed = 0.f;
 }
 
 void AFPRPGCharacter::BeginPlay()
@@ -76,19 +78,24 @@ void AFPRPGCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 
 void AFPRPGCharacter::OnAttackAction(float Value)
 {
-	// Trigger the OnAttack Event
-	if (Value == 1.0f && bCanAttack == true)
+	// Trigger the OnAttack Event based on AttackSpeed
+	if (Value == 1.0f && bCanAttack == true && AttackSpeed != 0.f)
 	{
 		bCanAttack = false;
 		OnAttack.Broadcast();
-		FTimerHandle handle;
-		GetWorldTimerManager().SetTimer(handle, this, &AFPRPGCharacter::ResetAttack, AttackSpeed, false);
+		FTimerHandle attackSpeedTimer;
+		GetWorldTimerManager().SetTimer(attackSpeedTimer, this, &AFPRPGCharacter::ResetAttack, AttackSpeed, false);
 	}
 }
 
 void AFPRPGCharacter::ResetAttack()
 {
 	bCanAttack = true;
+}
+
+void AFPRPGCharacter::SetAttackSpeed(float Value)
+{
+	AttackSpeed = Value;
 }
 
 void AFPRPGCharacter::OnReloadAction()

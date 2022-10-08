@@ -82,7 +82,6 @@ void UTP_WeaponComponent::Reload()
 			AmmoDisplay->Reload();
 		}
 	}
-		
 }
 
 void UTP_WeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -103,6 +102,9 @@ void UTP_WeaponComponent::AttachWeapon(AFPRPGCharacter* TargetCharacter)
 		// Attach the weapon to the First Person Character
 		FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, true);
 		GetOwner()->AttachToComponent(Character->GetMesh1P(),AttachmentRules, FName(TEXT("GripPoint")));
+
+		// Map Fire Rate to Character Attack Speed
+		Character->SetAttackSpeed(FireRate);
 
 		// Register so that Fire is called every time the character tries to use the item being held
 		Character->OnAttack.AddDynamic(this, &UTP_WeaponComponent::Fire);
