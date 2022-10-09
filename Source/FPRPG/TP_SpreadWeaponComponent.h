@@ -14,7 +14,7 @@ class FPRPG_API UTP_SpreadWeaponComponent : public UTP_WeaponComponent
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SpreadOptions)
-		int32 SpreadCount;
+	int32 SpreadCount;
 
 protected:
 	virtual void Fire() override;
