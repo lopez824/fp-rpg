@@ -18,5 +18,7 @@ public:
 
 protected:
 	virtual void Fire() override;
+
+	// Custom spawning for spread projectile
 	virtual void SpawnProjectile(UWorld* World) override;
 };
